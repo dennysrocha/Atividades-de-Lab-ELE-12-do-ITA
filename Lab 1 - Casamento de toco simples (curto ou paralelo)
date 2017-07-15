@@ -1,0 +1,344 @@
+﻿<script language="JavaScript">
+<!--
+
+function curto() { // mostra os resultados
+  var Z0 = parseFloat(document.getElementById("Z0").value, 10);
+  //Z0=document.forms[0].elements['n1'].value;
+  var ZLr = parseFloat(document.getElementById("ZLr").value, 10);
+  //ZLr=document.forms[0].elements['n2'].value;
+  var ZLi = parseFloat(document.getElementById("ZLi").value, 10);
+  //ZLi=document.forms[0].elements['n3'].value;
+  var f = parseFloat(document.getElementById("f").value, 10);
+  //f=document.forms[0].elements['n4'].value;
+  var fexp = parseFloat(document.getElementById("fexp").value, 10);
+  //fexp=document.forms[0].elements['n5'].value;
+  var BW = parseFloat(document.getElementById("BW").value, 10);
+  //BW=document.forms[0].elements['n6'].value;
+  var er = parseFloat(document.getElementById("er").value, 10);
+  //er=document.forms[0].elements['n7'].value;
+
+
+  if(Z0 == "" || ZLr == "" || ZLi == "" || f == "" || BW == "" || er == "" || fexp == "") {
+    window.alert("Faltam dados a serem preenchidos");
+  }
+  else {
+  lambda = (3*Math.pow(10,8))/(Math.sqrt(er)*f*Math.pow(10,fexp))
+  if(ZLr != Z0){
+    t1 = ZLi/(ZLr - Z0) + Math.sqrt((ZLr/Z0) * (Math.pow(Z0 - ZLr, 2) + Math.pow(ZLi,2)))/(ZLr - Z0)
+    t2 = (ZLi - Math.sqrt((ZLr/Z0) * (Math.pow(Z0 - ZLr, 2) + Math.pow(ZLi,2))))/(ZLr - Z0)
+  }
+  else{
+    t1 = -ZLi/(2*Z0)
+    t2 = -ZLi/(2*Z0)
+  }
+  p1 = Math.atan(t1) / (2*3.1416)
+  p2 = Math.atan(t2) / (2*3.1416)
+  if(t1<0){
+    if(t2<0){
+      d2 = lambda * (p1 + 0.5)
+    }
+    else{
+      d2 = lambda * p2
+    }
+    d1 = lambda * p1
+  }
+  else{
+    if(t2<0){
+      d2 = lambda * (p2 + 0.5)
+    }
+    else{
+      d2 = lambda * p2
+    }
+    d1 = lambda * p1
+  }
+
+    if(isNaN(d1)){
+      document.getElementById('d1').innerHTML="--";
+    } 
+    else{
+      document.getElementById('d1').innerHTML= d1;
+    }
+    if(isNaN(d2)){
+      document.getElementById('d2').innerHTML="--";
+    }
+    else{
+      document.getElementById('d2').innerHTML= d2;
+    }
+    //window.alert("Os valores de d são:\n\n"+d1+"\n"+d2);
+  }
+  Z1r = Z0*(ZLr*(Z0 - ZLi*t1) + (ZLi + Z0*t1)*ZLr*t1)/(Math.pow(Z0 - ZLi*t1,2) + Math.pow(ZLr*t1,2))
+  Z1i = Z0*((Z0 - ZLi*t1)*(ZLi + Z0*t1) - Math.pow(ZLr,2)*t1)/(Math.pow(Z0 - ZLi*t1,2) + Math.pow(ZLr*t1,2))
+  Y1r = Z1r/(Math.pow(Z1r,2) + Math.pow(Z1i,2))
+  Y1i = -Z1i/(Math.pow(Z1r,2) + Math.pow(Z1i,2))
+  Z2r = Z0*(ZLr*(Z0 - ZLi*t2) + (ZLi + Z0*t2)*ZLr*t2)/(Math.pow(Z0 - ZLi*t2,2) + Math.pow(ZLr*t2,2))
+  Z2i = Z0*((Z0 - ZLi*t2)*(ZLi + Z0*t2) - Math.pow(ZLr,2)*t2)/(Math.pow(Z0 - ZLi*t2,2) + Math.pow(ZLr*t2,2))
+  Y2r = Z2r/(Math.pow(Z2r,2) + Math.pow(Z2i,2))
+  Y2i = -Z2i/(Math.pow(Z2r,2) + Math.pow(Z2i,2))
+  l1 = lambda * Math.atan(Y1r/Y1i) / (2*3.1416)
+  l2 = lambda * Math.atan(Y2r/Y2i) / (2*3.1416)
+  while(l1<0){
+    l1 = l1 + 0.5*lambda
+  }
+  while(l2<0){
+    l2 = l2 + 0.5*lambda
+  }
+  l1aberto = -lambda * Math.atan(Y1i/Y1r) / (2*3.1416)
+  l2aberto = -lambda * Math.atan(Y2i/Y2r) / (2*3.1416)
+  while(l1aberto<0){
+    l1aberto = l1aberto+0.5*lambda
+  }
+  while(l2aberto<0){
+    l2aberto = l2aberto + 0.5*lambda
+  }
+  if(isNaN(l1)){
+    document.getElementById('l1').innerHTML="--";
+  }
+  else{
+    document.getElementById('l1').innerHTML= l1;
+  }
+  if(isNaN(l2)){
+    document.getElementById('l2').innerHTML="--";
+  }
+  else{
+    document.getElementById('l2').innerHTML= l2;
+  }
+  if(isNaN(l1aberto)){
+    document.getElementById('l1aberto').innerHTML="--";
+  }
+  else{
+    document.getElementById('l1aberto').innerHTML= l1aberto;
+  }
+  if(isNaN(l1)){
+    document.getElementById('l2aberto').innerHTML="--";
+  }
+  else{
+    document.getElementById('l2aberto').innerHTML= l2aberto;
+  }
+
+
+
+  fmin = f*Math.pow(10,fexp) - BW/2
+  fmax = f*Math.pow(10,fexp) + BW/2
+  betamin = 2*3.1416*fmin*Math.sqrt(er)/(3*Math.pow(10,8))
+  betamax = 2*3.1416*fmax*Math.sqrt(er) /(3*Math.pow(10,8))
+  t1min = Math.tan(betamin*d1)
+  t1max = Math.tan(betamax*d1)
+  t2min = Math.tan(betamin*d2)
+  t2max = Math.tan(betamax*d2)
+  
+
+  // calculando Z_r   (esta correto)
+  Zd1rmin = Z0*(ZLr*(Z0-ZLi*t1min) + (ZLi + Z0*t1min)*ZLr*t1min)/(Math.pow(Z0 - ZLi*t1min,2) + Math.pow(ZLr*t1min,2))
+  Zd1rmax = Z0*(ZLr*(Z0-ZLi*t1max) + (ZLi + Z0*t1max)*ZLr*t1max)/(Math.pow(Z0 - ZLi*t1max,2) + Math.pow(ZLr*t1max,2))
+  Zd2rmin = Z0*(ZLr*(Z0-ZLi*t2min) + (ZLi + Z0*t2min)*ZLr*t2min)/(Math.pow(Z0 - ZLi*t2min,2) + Math.pow(ZLr*t2min,2))
+  Zd2rmax = Z0*(ZLr*(Z0-ZLi*t2max) + (ZLi + Z0*t2max)*ZLr*t2max)/(Math.pow(Z0 - ZLi*t2max,2) + Math.pow(ZLr*t2max,2))
+
+  // calculando Z_i   (esta correto)
+  Zd1imin = Z0*(-Math.pow(ZLr,2)*t1min + (ZLi + Z0*t1min)*(Z0 - ZLi*t1min))/(Math.pow(Z0 - ZLi*t1min,2) + Math.pow(ZLr*t1min,2))
+  Zd1imax = Z0*(-Math.pow(ZLr,2)*t1max + (ZLi + Z0*t1max)*(Z0 - ZLi*t1max))/(Math.pow(Z0 - ZLi*t1max,2) + Math.pow(ZLr*t1max,2))
+  Zd2imin = Z0*(-Math.pow(ZLr,2)*t2min + (ZLi + Z0*t2min)*(Z0 - ZLi*t2min))/(Math.pow(Z0 - ZLi*t2min,2) + Math.pow(ZLr*t2min,2))
+  Zd2imax = Z0*(-Math.pow(ZLr,2)*t2max + (ZLi + Z0*t2max)*(Z0 - ZLi*t2max))/(Math.pow(Z0 - ZLi*t2max,2) + Math.pow(ZLr*t2max,2))
+
+
+
+  Yd1rmin = Zd1rmin/(Math.pow(Zd1rmin,2) + Math.pow(Zd1imin,2))
+  Yd1rmax = Zd1rmax/(Math.pow(Zd1rmax,2) + Math.pow(Zd1imax,2))
+  Yd2rmin = Zd2rmin/(Math.pow(Zd2rmin,2) + Math.pow(Zd2imin,2))
+  Yd2rmax = Zd2rmax/(Math.pow(Zd2rmax,2) + Math.pow(Zd2imax,2))
+
+  Yd1imin = -Zd1imin/(Math.pow(Zd1rmin,2)+Math.pow(Zd1imin,2))
+  Yd1imax = -Zd1imax/(Math.pow(Zd1rmax,2)+Math.pow(Zd1imax,2))
+  Yd2imin = -Zd2imin/(Math.pow(Zd2rmin,2)+Math.pow(Zd2imin,2))
+  Yd2imax = -Zd2imax/(Math.pow(Zd2rmax,2)+Math.pow(Zd2imax,2))
+
+  Y0 = 1/Z0
+
+  //Yt _ i _ curto
+  Ytmini1curto = -Y0/Math.tan(betamin*l1)
+  Ytmini2curto = -Y0/Math.tan(betamin*l2)
+  Ytmaxi1curto = -Y0/Math.tan(betamax*l1)
+  Ytmaxi2curto = -Y0/Math.tan(betamax*l2)
+  
+  //Yt _ i _ aberto
+  Ytmini1aberto = Y0*Math.tan(betamin*l1aberto)
+  Ytmini2aberto = Y0*Math.tan(betamin*l2aberto)
+  Ytmaxi1aberto = Y0*Math.tan(betamax*l1aberto)
+  Ytmaxi2aberto = Y0*Math.tan(betamax*l2aberto)
+
+  //Ytotal _ r _ curto
+  Ytot1rmincurto = Yd1rmin
+  Ytot1rmaxcurto = Yd1rmax
+  Ytot2rmincurto = Yd2rmin
+  Ytot2rmaxcurto = Yd2rmax
+  
+  //Ytotal _ i _ curto
+  Ytot1imincurto = Yd1imin + Ytmini1curto
+  Ytot1imaxcurto = Yd1imax + Ytmaxi1curto
+  Ytot2imincurto = Yd2imin + Ytmini2curto
+  Ytot2imaxcurto = Yd2imax + Ytmaxi2curto
+
+  //Ytotal _ r _ aberto
+  Ytot1rminaberto = Yd1rmin
+  Ytot1rmaxaberto = Yd1rmax
+  Ytot2rminaberto = Yd2rmin
+  Ytot2rmaxaberto = Yd2rmax
+
+  //Ytotal _ i _ aberto
+  Ytot1iminaberto = Yd1imin + Ytmini1aberto
+  Ytot1imaxaberto = Yd1imax + Ytmaxi1aberto
+  Ytot2iminaberto = Yd2imin + Ytmini2aberto
+  Ytot2imaxaberto = Yd2imax + Ytmaxi2aberto
+ 
+
+  
+  
+  
+
+  VSWRmind1curto = (1+Math.sqrt((Math.pow(1-Ytot1rmincurto*Z0,2) + Math.pow(Ytot1imincurto*Z0,2))/(Math.pow(1+Ytot1rmincurto*Z0,2) + Math.pow(Ytot1imincurto*Z0,2))))   /   (1-Math.sqrt((Math.pow(1-Ytot1rmincurto*Z0,2) + Math.pow(Ytot1imincurto*Z0,2))/(Math.pow(1+Ytot1rmincurto*Z0,2) + Math.pow(Ytot1imincurto*Z0,2))))
+
+  VSWRmind1aberto = (1+Math.sqrt((Math.pow(1-Ytot1rminaberto*Z0,2) + Math.pow(Ytot1iminaberto*Z0,2))/(Math.pow(1+Ytot1rminaberto*Z0,2) + Math.pow(Ytot1iminaberto*Z0,2))))   /   (1-Math.sqrt((Math.pow(1-Ytot1rminaberto*Z0,2) + Math.pow(Ytot1iminaberto*Z0,2))/(Math.pow(1+Ytot1rminaberto*Z0,2) + Math.pow(Ytot1iminaberto*Z0,2))))
+  
+  VSWRmaxd1curto = (1+Math.sqrt((Math.pow(1-Ytot1rmaxcurto*Z0,2) + Math.pow(Ytot1imaxcurto*Z0,2))/(Math.pow(1+Ytot1rmaxcurto*Z0,2) + Math.pow(Ytot1imaxcurto*Z0,2))))   /   (1-Math.sqrt((Math.pow(1-Ytot1rmaxcurto*Z0,2) + Math.pow(Ytot1imaxcurto*Z0,2))/(Math.pow(1+Ytot1rmaxcurto*Z0,2) + Math.pow(Ytot1imaxcurto*Z0,2))))
+
+  VSWRmaxd1aberto = (1+Math.sqrt((Math.pow(1-Ytot1rmaxaberto*Z0,2) + Math.pow(Ytot1imaxaberto*Z0,2))/(Math.pow(1+Ytot1rmaxaberto*Z0,2) + Math.pow(Ytot1imaxaberto*Z0,2))))   /   (1-Math.sqrt((Math.pow(1-Ytot1rmaxaberto*Z0,2) + Math.pow(Ytot1imaxaberto*Z0,2))/(Math.pow(1+Ytot1rmaxaberto*Z0,2) + Math.pow(Ytot1imaxaberto*Z0,2))))
+  //
+
+  VSWRmind2curto = (1+Math.sqrt((Math.pow(1-Ytot2rmincurto*Z0,2) + Math.pow(Ytot2imincurto*Z0,2))/(Math.pow(1+Ytot2rmincurto*Z0,2) + Math.pow(Ytot2imincurto*Z0,2))))   /   (1-Math.sqrt((Math.pow(1-Ytot2rmincurto*Z0,2) + Math.pow(Ytot2imincurto*Z0,2))/(Math.pow(1+Ytot2rmincurto*Z0,2) + Math.pow(Ytot2imincurto*Z0,2))))
+
+  VSWRmind2aberto = (1+Math.sqrt((Math.pow(1-Ytot2rminaberto*Z0,2) + Math.pow(Ytot2iminaberto*Z0,2))/(Math.pow(1+Ytot2rminaberto*Z0,2) + Math.pow(Ytot2iminaberto*Z0,2))))   /   (1-Math.sqrt((Math.pow(1-Ytot2rminaberto*Z0,2) + Math.pow(Ytot2iminaberto*Z0,2))/(Math.pow(1+Ytot2rminaberto*Z0,2) + Math.pow(Ytot2iminaberto*Z0,2))))
+  
+  VSWRmaxd2curto = (1+Math.sqrt((Math.pow(1-Ytot2rmaxcurto*Z0,2) + Math.pow(Ytot2imaxcurto*Z0,2))/(Math.pow(1+Ytot2rmaxcurto*Z0,2) + Math.pow(Ytot2imaxcurto*Z0,2))))   /   (1-Math.sqrt((Math.pow(1-Ytot2rmaxcurto*Z0,2) + Math.pow(Ytot2imaxcurto*Z0,2))/(Math.pow(1+Ytot2rmaxcurto*Z0,2) + Math.pow(Ytot2imaxcurto*Z0,2))))
+
+  VSWRmaxd2aberto = (1+Math.sqrt((Math.pow(1-Ytot2rmaxaberto*Z0,2) + Math.pow(Ytot2imaxaberto*Z0,2))/(Math.pow(1+Ytot2rmaxaberto*Z0,2) + Math.pow(Ytot2imaxaberto*Z0,2))))   /   (1-Math.sqrt((Math.pow(1-Ytot2rmaxaberto*Z0,2) + Math.pow(Ytot2imaxaberto*Z0,2))/(Math.pow(1+Ytot2rmaxaberto*Z0,2) + Math.pow(Ytot2imaxaberto*Z0,2))))
+
+
+
+  if(isNaN(VSWRmind1curto)){
+    document.getElementById('VSWRmind1curto').innerHTML="--";
+  }
+  else{
+    document.getElementById('VSWRmind1curto').innerHTML= VSWRmind1curto;
+  }
+  if(isNaN(VSWRmaxd1curto)){
+    document.getElementById('VSWRmaxd1curto').innerHTML="--";
+  }
+  else{
+    document.getElementById('VSWRmaxd1curto').innerHTML= VSWRmaxd1curto;
+  }
+  if(isNaN(VSWRmind2curto)){
+    document.getElementById('VSWRmind2curto').innerHTML="--";
+  }
+  else{
+    document.getElementById('VSWRmind2curto').innerHTML= VSWRmind2curto;
+  }
+  if(isNaN(VSWRmaxd2curto)){
+    document.getElementById('VSWRmaxd2curto').innerHTML="--";
+  }
+  else{
+    document.getElementById('VSWRmaxd2curto').innerHTML= VSWRmaxd2curto;
+  }
+  //
+  if(isNaN(VSWRmind1aberto)){
+    document.getElementById('VSWRmind1aberto').innerHTML="--";
+  }
+  else{
+    document.getElementById('VSWRmind1aberto').innerHTML= VSWRmind1aberto;
+  }
+  if(isNaN(VSWRmaxd1aberto)){
+    document.getElementById('VSWRmaxd1aberto').innerHTML="--";
+  }
+  else{
+    document.getElementById('VSWRmaxd1aberto').innerHTML= VSWRmaxd1aberto;
+  }
+  if(isNaN(VSWRmind2aberto)){
+    document.getElementById('VSWRmind2aberto').innerHTML="--";
+  }
+  else{
+    document.getElementById('VSWRmind2aberto').innerHTML= VSWRmind2aberto;
+  }
+  if(isNaN(VSWRmaxd2aberto)){
+    document.getElementById('VSWRmaxd2aberto').innerHTML="--";
+  }
+  else{
+    document.getElementById('VSWRmaxd2aberto').innerHTML= VSWRmaxd2aberto;
+  }
+  
+} 
+
+//-->
+</script>
+
+<form action="javascript:curto();" method="post">
+<h2>Dados:</h2><br>
+Z<sub>0</sub> <input type="text" id="Z0" onblur='faria()' size="5"><br><br>
+Z<sub>L</sub> <input type="text" id="ZLr" onblur='faria()' size="5"> + j<input type="text" id="ZLi" onblur='faria()' size="5"><br><br>
+f <input type="text" id="f" onblur='faria()' size="5">*10<sup><input type="text" id="fexp" onblur='faria()' size="5"></sup><br><br>
+BW <input type="text" id="BW" onblur='faria()' size="5"><br><br>
+e<sub>r</sub> <input type="text" id="er" onblur='faria()' size="5"><br><br>
+<input type="submit" value=" Calcular "></form><br><br>
+<b>Programa criado como trabalho da disciplina de ELE-12. Eventuais dúvidas podem ser sanadas pelo e-mail <a href="mailto:japa@dinho.com?subject=[Casamento de toco]"><b>deste link</b></a>.<br>
+
+<div id="saidas">
+
+  <h2> Saídas:</h2>
+
+    <table>
+      <tr>
+          <td> d<sub>1</sub> = </td><td><div id='d1'>--</div>
+        </td>
+      </tr>
+      <tr>
+          <td> d<sub>2</sub> = </td><td><div id='d2'>--</div>
+        </td>
+      </tr>
+      <tr>
+          <td> l<sub>1</sub><sup>curto</sup> = </td><td><div id='l1'>--</div>
+        </td>
+      </tr>
+      <tr>
+          <td> l<sub>2</sub><sup>curto</sup> = </td><td><div id='l2'>--</div>
+        </td>
+      </tr>
+      <tr>
+          <td> l<sub>1</sub><sup>aberto</sup> = </td><td><div id='l1aberto'>--</div>
+        </td>
+      </tr>
+      <tr>
+          <td> l<sub>2</sub><sup>aberto</sup> = </td><td><div id='l2aberto'>--</div>
+        </td>
+      </tr>
+      <tr>
+          <td> VSWR<sub>1, curto</sub><sup>min</sup> = </td><td><div id='VSWRmind1curto'>--</div>
+        </td>
+      </tr>
+      <tr>
+          <td> VSWR<sub>1, curto</sub><sup>max</sup> = </td><td><div id='VSWRmaxd1curto'>--</div>
+        </td>
+      </tr>
+      <tr>
+          <td> VSWR<sub>2, curto</sub><sup>min</sup> = </td><td><div id='VSWRmind2curto'>--</div>
+        </td>
+      </tr>
+      <tr>
+          <td> VSWR<sub>2, curto</sub><sup>max</sup> = </td><td><div id='VSWRmaxd2curto'>--</div>
+        </td>
+      </tr>
+      <tr>
+          <td> VSWR<sub>1, aberto</sub><sup>min</sup> = </td><td><div id='VSWRmind1aberto'>--</div>
+        </td>
+      </tr>
+      <tr>
+          <td> VSWR<sub>1, aberto</sub><sup>max</sup> = </td><td><div id='VSWRmaxd1aberto'>--</div>
+        </td>
+      </tr>
+      <tr>
+          <td> VSWR<sub>2, aberto</sub><sup>min</sup> = </td><td><div id='VSWRmind2aberto'>--</div>
+        </td>
+      </tr>
+      <tr>
+          <td> VSWR<sub>2, aberto</sub><sup>max</sup> = </td><td><div id='VSWRmaxd2aberto'>--</div>
+        </td>
+      </tr>
+      <tr>
+    </table>
+  </div>
