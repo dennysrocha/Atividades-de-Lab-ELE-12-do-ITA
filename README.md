@@ -1,2 +1,2 @@
-# lab-1---faria
+# Atividades
 casamento de toco - javascript
