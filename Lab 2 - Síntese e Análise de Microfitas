@@ -1,0 +1,356 @@
+﻿<script language="JavaScript">
+<!--
+function curto(){ // mostra os resultados
+  // INPUTS (e alguns inputs)
+
+  var sintese = 0;
+  var analise = 0;
+  var e_r = 0;
+  var sigma = 0;
+  var t = 0;
+  var f = 0;
+  var Z0_s = 0;
+  var Wh_s = 0;
+  var W = 0;
+  var h = 0;
+  var Wh_a = 0;
+  var Z0_a = 0;
+
+
+  // OUTPUTS
+  var e_e = 0;
+  var beta = 0;
+  var v_p = 0;
+  var a_d = 0;
+  var lambda_g = 0;
+  var a_c = 0;
+
+  sintese = parseFloat(document.getElementById("sintese").value, 10);
+  analise = parseFloat(document.getElementById("analise").value, 10);
+  e_r = parseFloat(document.getElementById("e_r").value, 10);
+  sigma = parseFloat(document.getElementById("sigma").value, 10);
+  t = parseFloat(document.getElementById("t").value, 10);
+  f = parseFloat(document.getElementById("f").value, 10);
+  Z0_s = parseFloat(document.getElementById("Z0_s").value, 10);
+  Wh_s = parseFloat(document.getElementById("Wh_s").value, 10);
+  W = parseFloat(document.getElementById("W").value, 10);
+  h = parseFloat(document.getElementById("h").value, 10);
+  Wh_a = parseFloat(document.getElementById("Wh_a").value, 10);
+  Z0_a = parseFloat(document.getElementById("Z0_a").value, 10);
+  e_e = parseFloat(document.getElementById("e_e").value, 10);
+  beta = parseFloat(document.getElementById("beta").value, 10);
+  v_p = parseFloat(document.getElementById("v_p").value, 10);
+  a_d = parseFloat(document.getElementById("a_d").value, 10);
+  lambda_g = parseFloat(document.getElementById("lambda_g").value, 10);
+  a_c = parseFloat(document.getElementById("a_c").value, 10);
+
+
+
+  //----------------------------------------------SÍNTESE
+  if(sintese > 0){
+    // Calculando W/h   -   printar W/h
+    Wh_s = 8*Math.exp((Z0_s/60)*Math.sqrt((e_r + 1)/2) + ((e_r - 1)/(e_r + 1))*(0.23 + 0.11/e_r))/(Math.exp(2*((Z0_s/60)*Math.sqrt((e_r + 1)/2) + ((e_r - 1)/(e_r + 1))*(0.23 + 0.11/e_r))) - 2)
+    if(Wh_s>2){
+      Wh_s = (2/3.14159265358979)*( - 1 - Math.log(2*377*3.14159265358979/(2*Z0_s*Math.sqrt(e_r)) - 1) + ((e_r - 1)/(2*e_r))(Math.log(377*3.14159265358979/(2*Z0_s*Math.sqrt(e_r))-1) + 0.39 - 0.61/e_r))
+    }
+    ///////////////////////////////////////////////////////////////////////////////////
+    // Calculando e_e   -   printar e_e
+    e_e = (e_r + 1)/2 + ((e_r - 1)/2)/Math.sqrt(1+12/Wh_s)
+    // Calculando v_p   -   printar v_p
+    v_p = 3*Math.pow(10, 8)/Math.sqrt(e_e)
+    // Calculando beta   -   printar beta
+    beta = (2*3.14159265358979*f/(3*Math.pow(10, 8)))*Math.sqrt(e_e)
+    // Calculando Z0 se foi fornecido W/d
+  }
+
+  //----------------------------------------------ANÁLISE
+  if(analise > 0){
+    // Calculando e_e   -   printar e_e
+    e_e = (e_r + 1)/2 + ((e_r - 1)/2)/Math.sqrt(1+12/Wh_a)
+    // Calculando v_p   -   printar v_p
+    v_p = 3*Math.pow(10, 8)/Math.sqrt(e_e)
+    // Calculando beta   -   printar beta
+    beta = (2*3.14159265358979*f/(3*Math.pow(10, 8)))*Math.sqrt(e_e)
+    ///////////////////////////////////////////////////////////////////////////////////
+    // Calculando Z0   -   printar Z0
+    if(Wh_a<=1){
+      Z0_a = (60/Math.sqrt(e_e))*Math.log(8/Wh_a + Wh_a/4)
+    }
+    else{
+      Z0_a = 120*3.14159265358979/(Math.sqrt(e_e)*(Wh_a + 1.393 + 0.667*Math.log(Wh_a + 1.444)))
+    }
+    if(h==0 && W!=0){
+      h = W/Wh_a
+    }
+    if(h!=0 && W==0){
+      W = Wh_a*h
+    }
+  }
+
+  // Calculando a atenuação no dielétrico   -   printar a_d
+  a_d = ((2*3.14159265358979*f/(3*Math.pow(10, 8)))*e_r*(e_e - 1)*t)/(2*Math.sqrt(e_e)*(e_r -1))
+  // Calculando a atenuação no condutor   -   printar a_c
+  if(analise > 0){
+    a_c = Math.sqrt(2*3.14159265358979*f*4*3.14159265358979/Math.pow(10, 7)/(2*sigma))/(Z0_a*W)
+  }
+  // Calculando o comprimento de onda guiado   -   printar lambda_g
+  lambda_g = 3*Math.pow(10, 8)/(f*Math.sqrt(e_e))
+
+  if(isNaN(sintese)){
+      document.getElementById('sintese').innerHTML="--";
+  }
+  else{
+    document.getElementById('sintese').innerHTML= sintese;
+  }
+  if(isNaN(analise)){
+    document.getElementById('analise').innerHTML="--";
+  } 
+  else{
+    document.getElementById('analise').innerHTML= analise;
+  }
+  if(isNaN(e_r)){
+    document.getElementById('e_r').innerHTML="--";
+  }
+  else{
+    document.getElementById('e_r').innerHTML= e_r;
+  }
+  if(isNaN(sigma)){
+    document.getElementById('sigma').innerHTML="--";
+  }
+  else{
+    document.getElementById('sigma').innerHTML= sigma;
+  }
+  if(isNaN(t)){
+    document.getElementById('t').innerHTML="--";
+  }
+  else{
+    document.getElementById('t').innerHTML= t;
+  }
+  if(isNaN(f)){
+    document.getElementById('f').innerHTML="--";
+  }
+  else{
+    document.getElementById('f').innerHTML= f;
+  }
+  if(isNaN(Z0_s)){
+    document.getElementById('Z0_s').innerHTML="--";
+  }
+  else{
+    document.getElementById('Z0_s').innerHTML= Z0_s;
+  }
+  if(isNaN(Z0_a)){
+    document.getElementById('Z0_a').innerHTML="--";
+  }
+  else{
+    document.getElementById('Z0_a').innerHTML= Z0_a;
+  }
+  if(isNaN(W)){
+    document.getElementById('W').innerHTML="--";
+  }
+  else{
+    document.getElementById('W').innerHTML= W;
+  }
+  if(isNaN(h)){
+    document.getElementById('h').innerHTML="--";
+  }
+  else{
+    document.getElementById('h').innerHTML= h;
+  }
+  if(isNaN(Wh_s)){
+    document.getElementById('Wh_s').innerHTML="--";
+  }
+  else{
+    document.getElementById('Wh_s').innerHTML= Wh_s;
+  }
+  if(isNaN(Wh_a)){
+    document.getElementById('Wh_a').innerHTML="--";
+  }
+  else{
+    document.getElementById('Wh_a').innerHTML= Wh_a;
+  }
+  if(isNaN(e_e)){
+    document.getElementById('e_e').innerHTML="--";
+  }
+  else{
+    document.getElementById('e_e').innerHTML= e_e;
+  }
+  if(isNaN(beta)){
+    document.getElementById('beta').innerHTML="--";
+  }
+  else{
+    document.getElementById('beta').innerHTML= beta;
+  }
+  if(isNaN(v_p)){
+    document.getElementById('v_p').innerHTML="--";
+  }
+  else{
+    document.getElementById('v_p').innerHTML= v_p;
+  }
+  if(isNaN(a_d)){
+    document.getElementById('a_d').innerHTML="--";
+  }
+  else{
+    document.getElementById('a_d').innerHTML= a_d;
+  }
+  if(isNaN(lambda_g)){
+    document.getElementById('lambda_g').innerHTML="--";
+  }
+  else{
+    document.getElementById('lambda_g').innerHTML= lambda_g;
+  }
+  if(isNaN(a_c)){
+    document.getElementById('a_c').innerHTML="--";
+  }
+  else{
+    document.getElementById('a_c').innerHTML= a_c;
+  }
+}
+  
+//-->
+</script>
+<html>
+<head>
+  <style>
+    html, body {
+      font-family: monospace;
+      font-size: 120%;
+      background-color: floralwhite;
+    }
+    html {
+    }
+    body {
+      position: static;
+      background-color: honeydew;
+      margin-left: 70px;
+      padding-left: 35px;
+      padding-top: 20px;
+      border: 6px solid peru;
+      max-width: 800px;
+      border-radius: 30px;
+      box-shadow: 10px 10px 10px 5px slategray;
+    }
+    p {
+      color: green;
+      border-collapse: separate;
+      border: 1px lavender;
+    }
+    table {
+      border: 1px solid black;
+      min-width: 300px; 
+      text-align: right;
+    }
+    .sol {
+      width: 150px;
+    }
+    .resp {
+      text-align: left;
+    }
+    footer {
+      overflow: auto;
+      position: relative;
+      max-width: 700px;
+      left: 50%;
+      margin-left: -370px;
+      margin-bottom: 30px;
+      padding-top: 10px;
+      text-align: center;
+      background-color: rgba(238,130,238,0.3);
+      border-radius: 12px;
+      box-shadow: inset 0px 10px 10px rgba(255,255,255,0.3); 
+    }
+    tr:hover {background-color: #f5f5f5}
+    .button {
+      font-family: monospace;
+      background-color: rgba(216,191,216,1);
+      border: none;
+      color: black;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 5px 2px gray;
+    }
+    .button:hover {
+        background-color: rgba(166,141,166,1);
+    }
+    .button:active {
+      background-color: rgba(166,141,166,1);
+      box-shadow: 0 0px gray;
+      transform: translateY(4px);
+    }
+  </style>
+  <title>Projeto 2 - ELE-12</title>
+  <h1 style="text-decoration: underline; text-align: center;">Projeto 2 - ELE-12</h1>
+</head>
+<body>
+
+  <form action="javascript:curto();" method="post">
+  <h2>Dados:</h2><br>
+  <h2>Síntese:</h2> (0 para não e 1 para sim) <input type="text" id="sintese" onblur='faria()' size="5"><br><br>
+  Z<sub>0</sub> <input type="text" id="Z0_s" onblur='faria()' size="5"><br><br>
+
+  <h2>Análise:</h2> (0 para não e 1 para sim) <input type="text" id="analise" onblur='faria()' size="5"><br><br>
+  W/h <input type="text" id="Wh_a" onblur='faria()' size="5"><br><br>
+  W <input type="text" id="W" onblur='faria()' size="5"><br><br>
+  h <input type="text" id="h" onblur='faria()' size="5"><br><br>
+  
+  <h2>Parâmetros:</h2>
+  f <input type="text" id="f" onblur='faria()' size="5"><br><br>
+  e<sub>r</sub> <input type="text" id="e_r" onblur='faria()' size="5"><br><br>
+  sigma <input type="text" id="sigma" onblur='faria()' size="5"><br><br>
+  tan(delta) <input type="text" id="t" onblur='faria()' size="5"><br><br>
+
+
+  <input class="button" type="submit" value=" Calcular "></form><br><br>
+
+
+  <div id="saidas">
+
+    <h2> Saídas:</h2>
+
+      <table>
+        <tr>
+            <td class="sol"> e<sub>e</sub> = </td><td class="resp"><div id='e_e'>--</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="sol"> beta = </td><td class="resp"><div id='beta'>--</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="sol"> v<sub>p</sub> = </td><td class="resp"><div id='v_p'>--</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="sol"> a<sub>d</sub> = </td><td class="resp"><div id='a_d'>--</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="sol"> a<sub>c</sub> = </td><td class="resp"><div id='a_c'>--</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="sol"> lambda<sub>g</sub> = </td><td class="resp"><div id='lambda_g'>--</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="sol"> W/h = </td><td class="resp"><div id='Wh_s'>--</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="sol"> Z<sub>0</sub> = </td><td class="resp"><div id='Z0_a'>--</div>
+           </td>
+        </tr>
+        <tr>
+      </table>
+  </div>
+</body>
+<br>
+<footer>
+  <b style= "color: gray; font-size: 60%;">Programa criado como trabalho da disciplina de ELE-12. Eventuais dúvidas podem ser sanadas pelo e-mail <a href="mailto:dennysrocha.1994@gmail.com?subject=[Casamento de toco]"><b>deste link</b></a><br>
+  Autores: <a href= "https://github.com/dennysrocha/"> Dennys Rocha</a><br>Daniel Vasconcelos<br><a href="https://github.com/guimafelipe/">Felipe Guimarães</a>
+  <br>Hudson Willian<br>Felipe Uchida<br>
+</footer>
+</html>
